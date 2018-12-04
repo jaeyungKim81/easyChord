@@ -12,6 +12,8 @@
 		CEC1FE8A21B4F71D00B594AB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEC1FE8821B4F71D00B594AB /* Main.storyboard */; };
 		CEC1FE8C21B4F72000B594AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEC1FE8B21B4F72000B594AB /* Assets.xcassets */; };
 		CEC1FE8F21B4F72000B594AB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEC1FE8D21B4F72000B594AB /* LaunchScreen.storyboard */; };
+		CED3C7ED21B51CDB00B65470 /* SongTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED3C7EC21B51CDB00B65470 /* SongTableViewCell.swift */; };
+		CED3C7EF21B5247F00B65470 /* ScrollSongViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED3C7EE21B5247F00B65470 /* ScrollSongViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		CEC1FE8B21B4F72000B594AB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CEC1FE8E21B4F72000B594AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CEC1FE9021B4F72000B594AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CED3C7EC21B51CDB00B65470 /* SongTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTableViewCell.swift; sourceTree = "<group>"; };
+		CED3C7EE21B5247F00B65470 /* ScrollSongViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollSongViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,10 +60,12 @@
 			children = (
 				CEC1FE8421B4F71D00B594AB /* AppDelegate.swift */,
 				CEC1FE8621B4F71D00B594AB /* ViewController.swift */,
+				CED3C7EC21B51CDB00B65470 /* SongTableViewCell.swift */,
 				CEC1FE8821B4F71D00B594AB /* Main.storyboard */,
 				CEC1FE8B21B4F72000B594AB /* Assets.xcassets */,
 				CEC1FE8D21B4F72000B594AB /* LaunchScreen.storyboard */,
 				CEC1FE9021B4F72000B594AB /* Info.plist */,
+				CED3C7EE21B5247F00B65470 /* ScrollSongViewController.swift */,
 			);
 			path = easyChord;
 			sourceTree = "<group>";
@@ -135,7 +141,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CED3C7ED21B51CDB00B65470 /* SongTableViewCell.swift in Sources */,
 				CEC1FE8721B4F71D00B594AB /* ViewController.swift in Sources */,
+				CED3C7EF21B5247F00B65470 /* ScrollSongViewController.swift in Sources */,
 				CEC1FE8521B4F71D00B594AB /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -219,7 +227,11 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_ENABLE_BATCH_MODE = NO;
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "$(SWIFT_MODULE_NAME)-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = YES;
 			};
 			name = Debug;
 		};
@@ -273,7 +285,11 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_ENABLE_BATCH_MODE = NO;
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "$(SWIFT_MODULE_NAME)-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -283,15 +299,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LYSMGG998P;
 				INFOPLIST_FILE = easyChord/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = yung..easyChord;
+				PRODUCT_BUNDLE_IDENTIFIER = yung.easyChord;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SDKROOT = iphoneos;
+				SWIFT_ENABLE_BATCH_MODE = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -300,15 +321,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LYSMGG998P;
 				INFOPLIST_FILE = easyChord/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = yung..easyChord;
+				PRODUCT_BUNDLE_IDENTIFIER = yung.easyChord;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SDKROOT = iphoneos;
+				SWIFT_ENABLE_BATCH_MODE = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

@@ -8,14 +8,30 @@
 
 import UIKit
 
+enum SongsDefaulsKeys {
+    static let title = "title"
+    static let lyrics = "lyrics"
+    static let chord = "chord"
+    static let songsArrKey = "songs"
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+//    private func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        let sampleDic: [String: String] =
+            [SongsDefaulsKeys.title : "샘플입니다.",
+             SongsDefaulsKeys.lyrics : "start너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n end",
+             SongsDefaulsKeys.chord: "startEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em      \n end "]
+        
+        let songArr: Array = [sampleDic]
+        UserDefaults.standard.set(songArr, forKey: SongsDefaulsKeys.songsArrKey)
+        
         return true
     }
 
