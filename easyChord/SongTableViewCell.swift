@@ -11,7 +11,7 @@ import UIKit
 class SongTableViewCell: UITableViewCell {
 
     @IBOutlet var titleLabel: UILabel?
-    var songsDataDic:Dictionary! = [:]
+    var songsData: SongModel?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -24,9 +24,9 @@ class SongTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func setData(data: Dictionary<String, String>) {
-        songsDataDic = data
-        titleLabel?.text = songsDataDic[SongsDefaulsKeys.title] as? String
+    func setData(data: SongModel) {
+        songsData = data
+        titleLabel?.text = songsData?.title
     }
 
 }

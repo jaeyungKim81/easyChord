@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE6EBFEC21B66C3E0071C6D6 /* CreateSongViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6EBFEB21B66C3E0071C6D6 /* CreateSongViewController.swift */; };
+		CE6EBFEE21B76D0D0071C6D6 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6EBFED21B76D0D0071C6D6 /* Util.swift */; };
 		CEC1FE8521B4F71D00B594AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC1FE8421B4F71D00B594AB /* AppDelegate.swift */; };
 		CEC1FE8721B4F71D00B594AB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC1FE8621B4F71D00B594AB /* ViewController.swift */; };
 		CEC1FE8A21B4F71D00B594AB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEC1FE8821B4F71D00B594AB /* Main.storyboard */; };
@@ -17,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CE6EBFEB21B66C3E0071C6D6 /* CreateSongViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSongViewController.swift; sourceTree = "<group>"; };
+		CE6EBFED21B76D0D0071C6D6 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		CEC1FE8121B4F71D00B594AB /* easyChord.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = easyChord.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEC1FE8421B4F71D00B594AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CEC1FE8621B4F71D00B594AB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -66,6 +70,8 @@
 				CEC1FE8D21B4F72000B594AB /* LaunchScreen.storyboard */,
 				CEC1FE9021B4F72000B594AB /* Info.plist */,
 				CED3C7EE21B5247F00B65470 /* ScrollSongViewController.swift */,
+				CE6EBFEB21B66C3E0071C6D6 /* CreateSongViewController.swift */,
+				CE6EBFED21B76D0D0071C6D6 /* Util.swift */,
 			);
 			path = easyChord;
 			sourceTree = "<group>";
@@ -142,8 +148,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				CED3C7ED21B51CDB00B65470 /* SongTableViewCell.swift in Sources */,
+				CE6EBFEE21B76D0D0071C6D6 /* Util.swift in Sources */,
 				CEC1FE8721B4F71D00B594AB /* ViewController.swift in Sources */,
 				CED3C7EF21B5247F00B65470 /* ScrollSongViewController.swift in Sources */,
+				CE6EBFEC21B66C3E0071C6D6 /* CreateSongViewController.swift in Sources */,
 				CEC1FE8521B4F71D00B594AB /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

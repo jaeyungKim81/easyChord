@@ -7,32 +7,47 @@
 //
 
 import UIKit
+import Foundation
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-   
+
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
+{
     @IBOutlet private var songsTableView: UITableView!
+    
+    static let didUpdate = "notifiUpdate"
     
     var songArr:Array! = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        songArr = UserDefaults.standard.array(forKey: SongsDefaulsKeys.songsArrKey)
-        
         songsTableView.delegate = self
         songsTableView.dataSource = self
         
-        print("songArr : \(songArr)")
+        navigationItem.title = "Songs"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addSong))
+        
+        loadData()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(loadData),
+                                               name: NSNotification.Name(rawValue: ViewController.didUpdate),
+                                               object: nil)
     }
     
-//    static func storyboardViewController() -> Self {
-//        guard let vc = storyboard().instantiateViewController(withIdentifier: String(describing: self)) as? Self else {
-//            fatalError("Could not instantiate storyboard with name: \(defaultStoryboardName)")
-//        }
-//        return vc
-//    }
-
-    //TableView DataSource
+    @objc func loadData()
+    {
+        DispatchQueue.main.async {
+            self.songArr = AppDelegate.getSongArr()
+            self.songsTableView.reloadData()
+        }
+    }
+    
+    @objc func addSong()
+    {
+        let createVC = CreateSongViewController.storyboardViewController()
+        self.navigationController?.pushViewController(createVC, animated: true)
+    }
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return songArr.count
     }
@@ -42,10 +57,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         guard  let itemCell = cell as? SongTableViewCell else {
             return cell!
         }
-
-        itemCell.setData(data: songArr[indexPath.row] as! Dictionary<String, String>)
+        print("indexPath.row : \(indexPath.row)")
+        print("songArr : \(String(describing: songArr))")
+        itemCell.setData(data: songArr[indexPath.row] as! SongModel)
         return cell!
     }
+    
     //TableView DataSource end
 
     //TableView Delegate
@@ -66,16 +83,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 82
+        return 62
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
         tableView.deselectRow(at: indexPath, animated: true)
         let scrollVC = ScrollSongViewController.storyboardViewController()
-        scrollVC.songData = songArr[indexPath.row] as! Dictionary<String, String>
+        scrollVC.songData = (songArr[indexPath.row] as! SongModel)
         navigationController?.pushViewController(scrollVC, animated: true)
     }
-    //TableView Delegate end
+
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]?
+    {
+        let deleteAction = UITableViewRowAction(style: .default, title: "Delete", handler: {(action, indexPath) -> Void in
+            print("deletAction")
+            let model = self.songArr[indexPath.row] as! SongModel
+            AppDelegate.deleteSong(key: model.key)
+            self.loadData()
+        })
+        return [deleteAction]
+    }
 }
 
 protocol Storyboard: class { //, HasApply, HasLet {
