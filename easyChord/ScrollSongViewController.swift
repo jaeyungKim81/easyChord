@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ScrollSongViewController: UIViewController {
+class ScrollSongViewController: UIViewController, UITextViewDelegate {
 
     @IBOutlet var lyric: UITextView!
     @IBOutlet var chord: UITextView!
@@ -25,8 +25,35 @@ class ScrollSongViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        
+        chord.delegate = self
+        
+        // 4th create the first piece of the string you don't want to be tappable
+        let regularText = NSMutableAttributedString(string: "any text ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 17), NSAttributedStringKey.foregroundColor: UIColor.black])
+        
+        // 5th create the second part of the string that you do want to be tappable. I used a blue color just so it can stand out.
+        let tappableText = NSMutableAttributedString(string: "READ MORE")
+        tappableText.addAttribute(NSAttributedStringKey.font, value: UIFont.systemFont(ofSize: 17), range: NSMakeRange(0, tappableText.length))
+        tappableText.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.blue, range: NSMakeRange(0, tappableText.length))
+        
+        // 6th this ISN'T NECESSARY but this is how you add an underline to the tappable part. I also used a blue color so it can match the tappableText and used the value of 1 for the height. The length of the underline is based on the tappableText's length using NSMakeRange(0, tappableText.length)
+        tappableText.addAttribute(NSAttributedStringKey.underlineStyle, value: 1, range: NSMakeRange(0, tappableText.length))
+        tappableText.addAttribute(NSAttributedStringKey.underlineColor, value: UIColor.blue, range: NSMakeRange(0, tappableText.length))
+        
+        // 7th this is the important part that connects the tappable link to the delegate method in step 11
+        // use NSAttributedStringKey.link and the value "makeMeTappable" to link the NSAttributedStringKey.link to the method. FYI "makeMeTappable" is a name I choose for clarity, you can use anything like "anythingYouCanThinkOf"
+        tappableText.addAttribute(NSAttributedStringKey.link, value: "makeMeTappable", range: NSMakeRange(0, tappableText.length))
+        
+        // 8th *** important append the tappableText to the regularText ***
+        regularText.append(tappableText)
+        
+        // 9th set the regularText to the textView's attributedText property
+        chord.attributedText = regularText
+    }
+    
+    deinit {
+        AppDelegate.setSpeed(model: songData, speed: Int(getNowSpeed()))
     }
     
     func loadImageFromPath(name: String) -> UIImage? {
@@ -43,28 +70,33 @@ class ScrollSongViewController: UIViewController {
     }
     
     func setHeight(){
-        let rate = (musicSheet.image?.size.width)! / musicSheet.frame.size.width
-        musicSheetHeight.constant = musicSheet.image!.size.height / rate
-        scrollHeight.constant = musicSheetHeight.constant
         
-        scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: scrollHeight.constant)
+        DispatchQueue.main.async(execute: { () -> Void in
+            var rate = (self.musicSheet.image?.size.width)! / self.musicSheet.frame.size.width
+            if UIDevice.current.orientation.isLandscape {
+                rate = (self.musicSheet.image?.size.width)! / self.musicSheet.frame.size.height
+            }
+            print("rate = \(rate)")
+            self.musicSheetHeight.constant = self.musicSheet.image!.size.height / rate
+            self.scrollHeight.constant = self.musicSheetHeight.constant
+            self.scrollView.contentSize = CGSize(width: self.scrollView.contentSize.width, height: self.scrollHeight.constant)
+        })
     }
     
     override func viewWillAppear(_ animated: Bool)
     {
+        print("songData = \(String(describing: songData))")
+        let xNSNumber  = songData!.speed as NSNumber
+        speedTF.text = xNSNumber.stringValue
+        
         if (songData?.type == SongsDefaulsKeys.saveTypeImg) {
             musicSheet.isHidden = false
             lyric.isHidden = true
             chord.isHidden = true
             if let img = loadImageFromPath(name: (songData?.key)!) {
-                
                 musicSheet.image = img
+                musicSheet.contentMode = .scaleAspectFit
                 setHeight()
-//                let rate = img.size.width / musicSheet.frame.size.width
-//                musicSheetHeight.constant = img.size.height / rate
-//                scrollHeight.constant = musicSheetHeight.constant
-//
-//                scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: scrollHeight.constant)
             }
             
         }else {
@@ -80,7 +112,8 @@ class ScrollSongViewController: UIViewController {
         }
         
         navigationItem.title = songData?.title
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(moveEditView))
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(moveEditView))
+        navigationItem.rightBarButtonItem = UIBarButtonItem.menuButton(self, action: #selector(moveEditView), imageName: "edit")
     }
     
     override func viewDidAppear(_ animated: Bool)
@@ -134,10 +167,14 @@ class ScrollSongViewController: UIViewController {
             scrollBtn.isSelected = false
             return
         }
-        scrollView.contentOffset.y = scrollView.contentOffset.y + getNowSpeed()
+        
         if(scrollBtn.isSelected) {
-            Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(scroll), userInfo: nil, repeats: false)
+            UIView.animate(withDuration: 0.1, animations: {
+                self.scrollView.contentOffset.y = self.scrollView.contentOffset.y + self.getNowSpeed()
+                Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.scroll), userInfo: nil, repeats: false)
+            })
         }
+        
     }
 
     override func didReceiveMemoryWarning() {

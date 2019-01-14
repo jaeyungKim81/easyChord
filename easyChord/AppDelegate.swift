@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import GoogleMobileAds
 
 enum SaveType: Int {
     case text = 0
@@ -20,6 +21,7 @@ struct SongModel : Codable{
     var chord: String = ""
     var key:String = ""
     var type:String = SongsDefaulsKeys.saveTypeText
+    var speed: Int = 5
 }
 
 enum SongsDefaulsKeys
@@ -42,7 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+
+        GADMobileAds.configure(withApplicationID: "ca-app-pub-5663501014164495~4457930662")
         
         guard UserDefaults.standard.array(forKey: SongsDefaulsKeys.songsDicKey) != nil else {
 //            let sampleDic: [String: String] =
@@ -56,20 +59,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //                                      lyric: "start너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n너를보내고\n end",
 //                                      chord: "startEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em           Em          \nEm           Em           Em      \n end ",
 //                                      key: "1")
-            
             return true
         }
         return true
     }
     
-//    static func getNextKey() -> String
-//    {
-//         var saveKeyStr = "1"
-//        if  let keyString = UserDefaults.standard.string(forKey: SongsDefaulsKeys.songCountKey) {
-//            saveKeyStr = String( Int(keyString)! + 1 )
-//        }
-//        return saveKeyStr
-//    }
+    static func setSpeed(model: SongModel?, speed: Int)
+    {
+        guard var myModel = model else {
+            return
+        }
+        myModel.speed = speed
+        guard var songDic = UserDefaults.standard.dictionary(forKey: SongsDefaulsKeys.songsDicKey) else {
+            return
+        }
+        let encoded = try? JSONEncoder().encode(myModel) as NSData
+        songDic[(model?.key)!] = encoded
+        
+        DispatchQueue.main.async {
+            UserDefaults.standard.set(songDic, forKey: SongsDefaulsKeys.songsDicKey)
+            UserDefaults.standard.synchronize()
+        }
+    }
     
     static func addOrEditSong(title: String, lyric: String="", chord: String="", key: String="", type: SaveType = .text, img: UIImage? = nil)
     {
@@ -90,7 +101,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        let model = SongModel(title: title, lyric: lyric, chord: chord, key: saveKeyStr, type: saveType)
+        let model = SongModel(title: title, lyric: lyric, chord: chord, key: saveKeyStr, type: saveType, speed: 5)
+        print("addOrEditSong = \(model)")
         let encoded = try? JSONEncoder().encode(model) as NSData
         
         var songDic = UserDefaults.standard.dictionary(forKey: SongsDefaulsKeys.songsDicKey)
@@ -100,8 +112,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             songDic![String(saveKeyStr)] = encoded!
         }
 
-        UserDefaults.standard.set(songDic, forKey: SongsDefaulsKeys.songsDicKey)
-        UserDefaults.standard.synchronize()
+        DispatchQueue.main.async {
+            UserDefaults.standard.set(songDic, forKey: SongsDefaulsKeys.songsDicKey)
+            UserDefaults.standard.synchronize()
+        }
     }
     
     static func deleteSong(key: String)
@@ -115,9 +129,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             songDic.removeValue(forKey: key)
             
-            UserDefaults.standard.set(songDic, forKey: SongsDefaulsKeys.songsDicKey)
-            UserDefaults.standard.synchronize()
-            
+            DispatchQueue.main.async {
+                UserDefaults.standard.set(songDic, forKey: SongsDefaulsKeys.songsDicKey)
+                UserDefaults.standard.synchronize()
+            }
         }
     }
     
@@ -163,25 +178,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-        // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F1FB8996610F85588257647 /* Pods_easyChord.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 675F7A2ECC3434CA44051048 /* Pods_easyChord.framework */; };
 		CE6EBFEC21B66C3E0071C6D6 /* CreateSongViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6EBFEB21B66C3E0071C6D6 /* CreateSongViewController.swift */; };
 		CE6EBFEE21B76D0D0071C6D6 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6EBFED21B76D0D0071C6D6 /* Util.swift */; };
 		CEC1FE8521B4F71D00B594AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC1FE8421B4F71D00B594AB /* AppDelegate.swift */; };
@@ -19,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		443A67B3029D92C94D10FEE4 /* Pods-easyChord.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-easyChord.release.xcconfig"; path = "Pods/Target Support Files/Pods-easyChord/Pods-easyChord.release.xcconfig"; sourceTree = "<group>"; };
+		675F7A2ECC3434CA44051048 /* Pods_easyChord.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_easyChord.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE6EBFEB21B66C3E0071C6D6 /* CreateSongViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSongViewController.swift; sourceTree = "<group>"; };
 		CE6EBFED21B76D0D0071C6D6 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		CEC1FE8121B4F71D00B594AB /* easyChord.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = easyChord.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -30,6 +33,7 @@
 		CEC1FE9021B4F72000B594AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CED3C7EC21B51CDB00B65470 /* SongTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTableViewCell.swift; sourceTree = "<group>"; };
 		CED3C7EE21B5247F00B65470 /* ScrollSongViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollSongViewController.swift; sourceTree = "<group>"; };
+		FD7F877BA835897A90739831 /* Pods-easyChord.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-easyChord.debug.xcconfig"; path = "Pods/Target Support Files/Pods-easyChord/Pods-easyChord.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,17 +41,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F1FB8996610F85588257647 /* Pods_easyChord.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5C3059838F45154F91C1515B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FD7F877BA835897A90739831 /* Pods-easyChord.debug.xcconfig */,
+				443A67B3029D92C94D10FEE4 /* Pods-easyChord.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		CEC1FE7821B4F71D00B594AB = {
 			isa = PBXGroup;
 			children = (
 				CEC1FE8321B4F71D00B594AB /* easyChord */,
 				CEC1FE8221B4F71D00B594AB /* Products */,
+				5C3059838F45154F91C1515B /* Pods */,
+				FC621D3956CB0606E60DE996 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -76,6 +92,14 @@
 			path = easyChord;
 			sourceTree = "<group>";
 		};
+		FC621D3956CB0606E60DE996 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				675F7A2ECC3434CA44051048 /* Pods_easyChord.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -83,6 +107,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CEC1FE9321B4F72000B594AB /* Build configuration list for PBXNativeTarget "easyChord" */;
 			buildPhases = (
+				7E94DB7D3DC14B3B75F4649F /* [CP] Check Pods Manifest.lock */,
 				CEC1FE7D21B4F71D00B594AB /* Sources */,
 				CEC1FE7E21B4F71D00B594AB /* Frameworks */,
 				CEC1FE7F21B4F71D00B594AB /* Resources */,
@@ -141,6 +166,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7E94DB7D3DC14B3B75F4649F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-easyChord-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CEC1FE7D21B4F71D00B594AB /* Sources */ = {
@@ -304,6 +350,7 @@
 		};
 		CEC1FE9421B4F72000B594AB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FD7F877BA835897A90739831 /* Pods-easyChord.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -326,6 +373,7 @@
 		};
 		CEC1FE9521B4F72000B594AB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 443A67B3029D92C94D10FEE4 /* Pods-easyChord.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

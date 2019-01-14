@@ -26,15 +26,22 @@ class CreateSongViewController: UIViewController, UITextViewDelegate, UIImagePic
     var model: SongModel?
     var isSet = false
     var saveType:SaveType = .text
+    
     let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width:UIScreen.main.bounds.size.width , height: 50))
     
     let infoBarItem:UIBarButtonItem = UIBarButtonItem(title: "input lyric", style: UIBarButtonItemStyle.plain, target: self, action: nil)
+    let chordBarItem = UIBarButtonItem.menuButton(self, action: #selector(changeChordAndLyric(_:)), imageName: "chord", title: "chord", width: 77)
+    let lyricBarItem = UIBarButtonItem.menuButton(self, action: #selector(changeChordAndLyric(_:)), imageName: "lyric", title: "lyric", width: 77)
+    let saveItem = UIBarButtonItem.menuButton(self, action: #selector(save), imageName: "save", title: "save", width: 70)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        navigationItem.title = "Add Song"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Title", style: .plain, target: self, action: #selector(showInputTitleAlert))
+        navigationItem.rightBarButtonItem = UIBarButtonItem.menuButton(self, action: #selector(showInputTitleAlert), imageName: "edit")
+        navigationController?.navigationBar.tintColor = UIColor.black//UIColor.gray
+        
+        print(" chordBarItem: \(String(describing: chordBarItem.title))")
+        print(" lyricBarItem: \(String(describing: lyricBarItem.title))")
     }
     
     //scrollViewDelegate
@@ -59,7 +66,9 @@ class CreateSongViewController: UIViewController, UITextViewDelegate, UIImagePic
             self.setSaveType(type: .image)
             self.showImgPicker()
         }))
-        actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler:  { result in
+            self.navigationController?.popViewController(animated: true)
+        }))
         self.present(actionSheet, animated: true, completion: nil)
     }
     
@@ -97,10 +106,43 @@ class CreateSongViewController: UIViewController, UITextViewDelegate, UIImagePic
     
     func setImg(img: UIImage)
     {
-        musicSheet.image = img
         let rate = img.size.width / musicSheet.frame.size.width
+        if let _ = musicSheet.image {
+            let newImgViewHei = img.size.height / rate
+            
+            let newImgView = UIImageView(frame: CGRect(x: 0, y: scrollHeight.constant, width: musicSheet.frame.size.width, height: newImgViewHei))
+            newImgView.image = img
+            scrollView.addSubview(newImgView)
+            scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: scrollHeight.constant + newImgViewHei)
+            
+            let newImg = screenshot()!
+            musicSheet.image = nil
+            setImg(img:newImg )
+            return
+        }
+        musicSheet.image = img
         scrollHeight.constant = img.size.height / rate
         scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: scrollHeight.constant)
+    }
+    
+    func screenshot() -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(scrollView.contentSize, false, 0.0)
+        let savedContentOffset = scrollView.contentOffset
+        let savedFrame = scrollView.frame
+        defer {
+            UIGraphicsEndImageContext()
+            scrollView.contentOffset = savedContentOffset
+            scrollView.frame = savedFrame
+        }
+        scrollView.contentOffset = .zero
+        scrollView.frame = CGRect(x: 0, y: 0, width: scrollView.contentSize.width, height: scrollView.contentSize.height)
+        guard let ctx = UIGraphicsGetCurrentContext() else {
+            return nil
+        }
+       scrollView.layer.render(in: ctx)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        
+        return image
     }
     
     override func viewDidAppear(_ animated: Bool)
@@ -109,7 +151,6 @@ class CreateSongViewController: UIViewController, UITextViewDelegate, UIImagePic
             return
         }
         isSet = true
-        
         if model != nil {
             if (model?.type == SongsDefaulsKeys.saveTypeImg) {
                 setSaveType(type: .image)
@@ -132,13 +173,17 @@ class CreateSongViewController: UIViewController, UITextViewDelegate, UIImagePic
         musicSheet.isHidden = !(type == .image )
         
         toolBar.barStyle = UIBarStyle.default
+        
+        saveItem.title = "save"
         var itemArr =  [
-            UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
-            UIBarButtonItem(title: "Img", style: UIBarButtonItemStyle.plain, target: self, action: #selector(showImgPicker)),
-            UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.plain, target: self, action: #selector(save)),
+            saveItem
         ]
         
         if type == .image {
+            
+            let imgItem = UIBarButtonItem.menuButton(self, action: #selector(showImgPicker), imageName: "img", title: "image", width:80)
+            itemArr.append(imgItem)
+//            itemArr.append(UIBarButtonItem(title: "Img", style: UIBarButtonItemStyle.plain, target: self, action: #selector(showImgPicker)))
             
             toolBar.items = itemArr
             view.addSubview(toolBar)
@@ -149,7 +194,9 @@ class CreateSongViewController: UIViewController, UITextViewDelegate, UIImagePic
             
         }else if type == .text {
             
-            itemArr.append(UIBarButtonItem(title: "Chord", style: UIBarButtonItemStyle.plain, target: self, action: #selector(changeChordAndLyric(_:))))
+//            itemArr.append(UIBarButtonItem(title: "Chord", style: UIBarButtonItemStyle.plain, target: self, action: #selector(changeChordAndLyric(_:))))
+//            textItem.title = "Chord"
+            itemArr.append(chordBarItem)
             toolBar.items = itemArr
             
             chordTF.inputAccessoryView = toolBar
@@ -173,6 +220,11 @@ class CreateSongViewController: UIViewController, UITextViewDelegate, UIImagePic
     
     
     @objc func showInputTitleAlert()  {
+        if saveType == .text {
+            self.disableTextView(target: self.chordTF)
+            self.ableTextView(target: self.lyricTF)
+        }
+        
         let alert = UIAlertController(title: "Input Title", message: "", preferredStyle: .alert)
         alert.addTextField(configurationHandler: { (textField) -> Void in
             if(self.navigationItem.title == "") {
@@ -180,20 +232,19 @@ class CreateSongViewController: UIViewController, UITextViewDelegate, UIImagePic
             }else {
                 textField.text = self.navigationItem.title
             }
-            self.disableTextView(target: self.chordTF)
-            self.ableTextView(target: self.lyricTF)
         })
         alert.addAction(UIAlertAction(title: "cancel", style: .default, handler: {  Void in
-            self.disableTextView(target: self.chordTF)
-            self.ableTextView(target: self.lyricTF)
-            self.view.endEditing(true)
+            if self.saveType == .image {
+                alert.view.endEditing(true)
+            }
         }))
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (action) -> Void in
             let textField = alert?.textFields![0]
             print("Text field: \(String(describing: textField?.text))")
             self.navigationItem.title = textField?.text
-            self.navigationItem.rightBarButtonItem?.title = "Edit"
-            self.view.endEditing(true)
+            if self.saveType == .image {
+                alert?.view.endEditing(true)
+            }
         }))
         self.present(alert, animated: true, completion: nil)
     }
@@ -201,7 +252,7 @@ class CreateSongViewController: UIViewController, UITextViewDelegate, UIImagePic
     @objc func save()
     {
         if navigationItem.title == nil || navigationItem.title == "" {
-            showSimpleAlert(msg: "제목을 입력해 주세요.")
+            showInputTitleAlert()
             return
         }
         
@@ -229,26 +280,29 @@ class CreateSongViewController: UIViewController, UITextViewDelegate, UIImagePic
                 AppDelegate.addOrEditSong(title: navigationItem.title!, key: (model?.key)!, type: .image, img: musicSheet.image)
             }
         }
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: ViewController.didUpdate), object: nil)
         if model == nil {
             navigationController?.popViewController(animated: true)
         }else {
             navigationController?.popToRootViewController(animated: true)
         }
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: ViewController.didUpdate), object: nil)
     }
     
     @objc func done () {
     }
     
-    @objc func changeChordAndLyric(_ sender: UIBarButtonItem) {
-        if(sender.title == "Chord") {   //Lyric -> Chord
-            sender.title = "Lyric"
-            infoBarItem.title = "Input Chord"
+    @objc func changeChordAndLyric(_ sender: UIButton)
+    {
+        print(" sender: \(String(describing: sender))")
+        print(" sender.title: \(String(describing: sender.title(for: .normal)))")
+        if(sender.title(for: .normal) == "chord") {
+            toolBar.items?.remove(at: 1)
+            toolBar.items?.append(lyricBarItem)
             disableTextView(target: lyricTF)
             ableTextView(target: chordTF)
         }else {
-            sender.title = "Chord"
-            infoBarItem.title = "Input chord"
+            toolBar.items?.remove(at: 1)
+            toolBar.items?.append(chordBarItem)
             disableTextView(target: chordTF)
             ableTextView(target: lyricTF)
         }
@@ -276,6 +330,5 @@ class CreateSongViewController: UIViewController, UITextViewDelegate, UIImagePic
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
