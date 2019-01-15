@@ -169,7 +169,7 @@ class ScrollSongViewController: UIViewController, UITextViewDelegate {
         }
         
         if(scrollBtn.isSelected) {
-            UIView.animate(withDuration: 0.1, animations: {
+            UIView.animate(withDuration: 0.01, animations: {
                 self.scrollView.contentOffset.y = self.scrollView.contentOffset.y + self.getNowSpeed()
                 Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.scroll), userInfo: nil, repeats: false)
             })
