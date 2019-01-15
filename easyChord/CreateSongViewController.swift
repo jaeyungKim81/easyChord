@@ -7,13 +7,9 @@
 //
 
 import UIKit
+import GoogleMobileAds
 
-//enum saveType : Int {
-//    case text = 0
-//    class img
-//}
-
-class CreateSongViewController: UIViewController, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class CreateSongViewController: UIViewController, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, GADInterstitialDelegate, GADRewardBasedVideoAdDelegate {
 
     @IBOutlet var chordTF: UITextView!
     @IBOutlet var lyricTF: UITextView!
@@ -34,11 +30,21 @@ class CreateSongViewController: UIViewController, UITextViewDelegate, UIImagePic
     let lyricBarItem = UIBarButtonItem.menuButton(self, action: #selector(changeChordAndLyric(_:)), imageName: "lyric", title: "lyric", width: 77)
     let saveItem = UIBarButtonItem.menuButton(self, action: #selector(save), imageName: "save", title: "save", width: 70)
     
+    var interstitial: GADInterstitial!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem.menuButton(self, action: #selector(showInputTitleAlert), imageName: "edit")
         navigationController?.navigationBar.tintColor = UIColor.black//UIColor.gray
+
+//reward
+        GADRewardBasedVideoAd.sharedInstance().delegate = self
+        
+        interstitial = GADInterstitial(adUnitID: "ca-app-pub-5663501014164495/4870538791")
+        let request = GADRequest()
+        interstitial.load(request)
+        interstitial.delegate = self
         
         print(" chordBarItem: \(String(describing: chordBarItem.title))")
         print(" lyricBarItem: \(String(describing: lyricBarItem.title))")
@@ -249,31 +255,54 @@ class CreateSongViewController: UIViewController, UITextViewDelegate, UIImagePic
         self.present(alert, animated: true, completion: nil)
     }
     
-    @objc func save()
-    {
+    func validation() -> Bool {
         if navigationItem.title == nil || navigationItem.title == "" {
             showInputTitleAlert()
-            return
+            return false
         }
         
         if (saveType == .text) {    //
             if lyricTF.text == "" {
                 showSimpleAlert(msg: "가사를 입력해 주세요.")
-                return
+                return false
             }else if chordTF.text == "" {
                 showSimpleAlert(msg: "코드를 입력해 주세요.")
-                return
+                return false
             }
+            return true
+        }else if (saveType == .image) {
+            if musicSheet.image == nil {
+                showSimpleAlert(msg: "이미지를 선택해 주세요.")
+                return false
+            }
+            return true
+        }else {
+            return false
+        }
+    }
+    
+    @objc func save()
+    {
+        if !validation() {
+            return
+        }
+        if GADRewardBasedVideoAd.sharedInstance().isReady {
+            GADRewardBasedVideoAd.sharedInstance().present(fromRootViewController: self)
+        }else if interstitial.isReady {
+            interstitial.present(fromRootViewController: self)
+        }else {
+            addData()
+        }
+    }
+    
+    func addData() {
+        if (saveType == .text) {    //
             if model == nil {
                 AppDelegate.addOrEditSong(title: navigationItem.title!, lyric: lyricTF.text, chord: chordTF.text)
             }else {
                 AppDelegate.addOrEditSong(title: navigationItem.title!, lyric: lyricTF.text, chord: chordTF.text, key: (model?.key)!)
             }
         }else if (saveType == .image) {
-            if musicSheet.image == nil {
-                showSimpleAlert(msg: "이미지를 선택해 주세요.")
-                return
-            }
             if model == nil {
                 AppDelegate.addOrEditSong(title: navigationItem.title!, type: .image, img: musicSheet.image)
             } else {
@@ -326,6 +355,41 @@ class CreateSongViewController: UIViewController, UITextViewDelegate, UIImagePic
         target.isUserInteractionEnabled = true
         target.isEditable = true
         target.becomeFirstResponder()
+    }
+    
+    ///reward
+    func rewardBasedVideoAd(_ rewardBasedVideoAd: GADRewardBasedVideoAd,
+                            didRewardUserWith reward: GADAdReward) {
+        print("Reward received with currency: \(reward.type), amount \(reward.amount).")
+    }
+    func rewardBasedVideoAdDidReceive(_ rewardBasedVideoAd:GADRewardBasedVideoAd) {
+        print("Reward based video ad is received.")
+    }
+    func rewardBasedVideoAdDidOpen(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
+        print("Opened reward based video ad.")
+    }
+    func rewardBasedVideoAdDidStartPlaying(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
+        print("Reward based video ad started playing.")
+    }
+    func rewardBasedVideoAdDidCompletePlaying(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
+        print("Reward based video ad has completed.")
+    }
+    func rewardBasedVideoAdDidClose(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
+        addData()
+        GADRewardBasedVideoAd.sharedInstance().load(GADRequest(), withAdUnitID: "ca-app-pub-5663501014164495/5155095310")
+        print("Reward based video ad is closed.")
+    }
+    func rewardBasedVideoAdWillLeaveApplication(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
+        print("Reward based video ad will leave application.")
+    }
+    func rewardBasedVideoAd(_ rewardBasedVideoAd: GADRewardBasedVideoAd,
+                            didFailToLoadWithError error: Error) {
+        print("Reward based video ad failed to load.")
+    }
+    
+/// Front
+    func interstitialDidDismissScreen(_ ad: GADInterstitial) {
+        addData()
     }
 
     override func didReceiveMemoryWarning() {

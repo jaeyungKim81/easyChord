@@ -46,6 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
         GADMobileAds.configure(withApplicationID: "ca-app-pub-5663501014164495~4457930662")
+        GADRewardBasedVideoAd.sharedInstance().load(GADRequest(), withAdUnitID: "ca-app-pub-5663501014164495/5155095310")
         
         guard UserDefaults.standard.array(forKey: SongsDefaulsKeys.songsDicKey) != nil else {
 //            let sampleDic: [String: String] =
