@@ -150,7 +150,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         return Array()
     }
-    
 
     static func saveImage(img: UIImage, name: String) -> Bool
     {
